@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    未进行防抖的输入框：<br/>
+    <input type="text" id="inp1"><br>
+    进行防抖的输入框：<br/>
+    <input type="text" id="inp2"><br>
+    进行节流的输入框：<br/>
+    <input type="text" id="inp3"><br>
+    进行防抖+节流的输入框：<br/>
+    <input type="text" id="inp4"><br>
+
+    <script>
+        const inp1 = document.getElementById('inp1');
+        const inp2 = document.getElementById('inp2');
+        const inp3 = document.getElementById('inp3');
+        const inp4 = document.getElementById('inp4');
+
+        inp1.oninput = function(e) {
+            console.log(e.target.value)
+        }
+
+        // 防抖
+        function debounce(func, delay) {
+            let timer = null;
+            return function(...arg) {
+                let self = this;
+                if(timer) clearTimeout(timer);
+                timer = setTimeout(function() {
+                    func.apply(self, arg);
+                }, delay);
+            }
+        }
+
+        // 节流
+        function throttle(func, time) {
+            let flag = true;
+            return function(...arg) {
+                let self = this;
+                if(!flag) return;
+                flag = false;
+                setTimeout(function() {
+                    func.apply(self, arg);
+                    flag = true;
+                }, time);
+            }
+        }
+        // 节流
+        function throttle2(func, time) {
+            let last = 0;
+            return function(...arg) {
+                let self = this;
+                let now = +new Date();
+                if(now - last < time) return;
+                func.apply(self, arg);
+                last = now;
+            }
+        }
+
+        // 防抖+节流
+        function throttleWithDebounce(func, delay) {
+            let last = 0, timer = null;
+            return function(...arg) {
+                let self = this;
+                let now = +new Date();
+                console.log(now - last, delay);
+                if(now - last < delay) {
+                    clearTimeout(timer);
+                    timer = setTimeout(function() {
+                        last = now;
+                        func.apply(self, arg);
+                    }, delay);
+                } else {
+                    last = now;
+                    func.apply(self, arg);
+                }
+            }
+        }
+
+        
+        let debounceInput = debounce(function(content) {
+            console.log(content);
+        }, 1000);
+
+        inp2.oninput = function(e) {
+            debounceInput(e.target.value);
+        }
+
+        let throttleInput = throttle(function(content) {
+            console.log(content);
+        }, 1000)
+
+        inp3.oninput = function(e) {
+            throttleInput(e.target.value);
+        }
+
+        let throttleWithDebounceInput = throttleWithDebounce(function(content) {
+            console.log(content);
+        }, 1000)
+
+        inp4.oninput = function(e) {
+            throttleWithDebounceInput(e.target.value);
+        }
+        
+        
+
+    </script>
+</body>
+</html>
