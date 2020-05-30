@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .wrapper {
+            width: 200px;
+            height: 200px;
+            border: 1px solid;
+        }
+        .box {
+            width: 100px;
+            height: 100px;
+            border: 1px solid;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper" id="wrapper">
+        <div class="box" id="box">
+            <a href="http://www.baidu.com">go</a>
+        </div>
+    </div>
+
+    <script>
+        var wrapper = document.getElementById('wrapper');
+        var box = document.getElementById('box');
+
+        wrapper.onclick = function(e) {
+            var e = e || window.event;
+            console.log(e.target);
+        }
+
+        box.onclick = function(e) {
+            var e = e || window.event;
+            console.log(e.srcElement);
+            console.log(this == window)
+            // e.preventDefault();
+            e.returnValue = false
+        }
+    </script>
+</body>
+</html>
